@@ -111,30 +111,67 @@ SELECT DISTINCT iva FROM facturas;
 
 -- 6. Mostrar el código y nombre de aquellas provincias cuyo código es menor a 20. 
 
-SELECT 
 
--- 7. Mostrar los dis8ntos 8pos de descuento de aplicados por los vendedores que cuyos códigos no superan el valor 50. 
- 
- 
--- 8. Mostrar el código y descripción de aquellos arYculos cuyo stock es igual o supera los 50 unidades.
 
+-- 7. Mostrar los distintos tipos de descuento  aplicados por los vendedores  cuyos códigos no superan el valor 50. 
  
--- 9. Mostrar el código y fechas de las facturas con IVA 16 y que pertenecen al cliente de código 100. 
-10. Mostrar el código y fechas de las facturas con IVA 16 o con descuento 20 y que pertenecen al 
-cliente de código 100. 
-11. Mostrar el código de la factura y el número de línea de las facturas cuyas líneas superan 100 Bs sin 
-considerar descuentos ni impuestos. 
-12. Importe medio por factura, sin considerar descuentos ni impuestos. El importe de una factura se 
-calcula sumando el producto de la can8dad por el precio de sus líneas. 
-13. Stock medio, máximo, y mínimo de los arYculos que con8enen la letra A en la segunda posición 
-de su descripción y cuyo stock mínimo es superior a la mitad de su stock actual. 
-14. Número de facturas para cada año. Junto con el año debe aparecer el número de facturas de ese 
-año. 
-15. Número de facturas de cada cliente, pero sólo se deben mostrar aquellos clientes que 8enen más 
-de 15 facturas. 
-16. Can8dades totales vendidas para cada arYculo cuyo código empieza por “F”. La can8dad total 
-vendida de un arYculo se calcula sumando las can8dades de todas sus líneas de factura. 
-17. Código de aquellos arYculos de los que se ha facturado más de 6000 euros. 
+ 
+-- 8. Mostrar el código y descripción de aquellos articulos cuyo stock es igual o supera las 2 unidades.
+
+SELECT cod_art as CODIGO, descripcion_art as DESCRIPCION FROM articulos WHERE stock_art > 2;
+ 
+
+
+-- 9. Mostrar el código y fechas de las facturas con IVA 21  y que pertenecen al cliente de código 2. 
+
+SELECT cod_fac,fecha_fac FROM facturas WHERE iva = 0.21 AND cod_cli =2;
+
+-- 10. Mostrar el código  y fechas de las facturas con IVA 21 
+-- o con descuento 10% y que pertenecen al cliente de código 1.
+
+SELECT cod_fac, fecha_fac FROM facturas WHERE (iva = 0.21 or descuento_fac = 10) AND cod_cli =1;
+
+-- 11.  Mostrar el código de la factura y el número de línea de las facturas 
+-- cuyas líneas superan 100 euros sin considerar descuentos ni impuestos.
+
+
+
+
+
+
+-- 12. Importe medio por factura, sin considerar descuentos ni impuestos. El importe de una factura se 
+-- calcula sumando el producto de la cantidad por el precio de sus líneas. 
+
+SELECT cod_fac, AVG(precio* cant_lin) as media FROM lineas_fac GROUP BY cod_fac;
+
+-- 13. Stock medio, máximo, y mínimo de los artículos que contienen la letra o en la segunda posición 
+-- de su descripción y cuyo stock mínimo es superior a la mitad de su stock actual. 
+
+SELECT descripcion_art, AVG(stock_art) as media, MAX(stock_art) as maximo, MIN(stock_art) as minimo
+FROM articulos
+where descripcion_art LIKE "_O%" AND stock_min > (stock_art/2)
+GROUP BY descripcion_art;
+
+-- 14. Número de facturas para cada año. Junto con el año debe aparecer el número de facturas de ese año.
+ SELECT YEAR(fecha_fac);
+ 
+-- 15. Número de facturas de cada cliente, pero sólo se deben mostrar aquellos clientes que tienen menos de 2 facturas.
+
+SELECT cod_cli, COUNT(*) as cantidad_fac FROM facturas GROUP BY cod_cli HAVING cantidad_fac < 2 ; 
+ 
+-- 16. Cantidades totales vendidas para cada artículo cuyo descripción empiece por “M”. La cantidad total 
+-- vendida de un artículo se calcula sumando las cantidades de todas sus líneas de factura.
+
+SELECT a.cod_art, a.descripcion_art, SUM(l.cant_lin)
+FROM articulos a
+JOIN lineas_fac l
+ON a.cod_art = l.cod_art
+WHERE a.descripcion_art LIKE "M%"
+GROUP BY l.cod_art;
+ 
+
+
+-- 17. Código de aquellos arYculos de los que se ha facturado más de 6000 euros. 
  
 18. Número de facturas de cada uno de los clientes cuyo código está entre 241 y 250, con cada IVA 
 dis8nto que se les ha aplicado. En cada línea del resultado se debe mostrar un código de cliente, 
