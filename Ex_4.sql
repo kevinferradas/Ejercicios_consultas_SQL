@@ -66,6 +66,17 @@ ON  d.DNI_jefe = j.DNI;
 
 -- 7. Mostrar el número de despachos que están sobre utilizados.
 
+SELECT COUNT(d.id_despacho)
+FROM directores d
+WHERE id_despacho IN (
+	SELECT d.id_despacho 
+    FROM directores d
+    JOIN despachos de
+    ON d.id_despacho = de.id_despacho
+    
+    GROUP BY id_departamento HAVING COUNT(DNI)>2
+    );
+    
 
 
 -- 8. Añadir un nuevo director llamado Paco Pérez, DNI 28301700, sin jefe, y situado en el despacho 124.
