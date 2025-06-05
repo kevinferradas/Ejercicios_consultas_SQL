@@ -66,16 +66,21 @@ ON  d.DNI_jefe = j.DNI;
 
 -- 7. Mostrar el número de despachos que están sobre utilizados.
 
-SELECT COUNT(d.id_despacho)
-FROM directores d
-WHERE id_despacho IN (
-	SELECT d.id_despacho 
+SELECT COUNT(*) AS despachos_sobreutilizados
+FROM (
+    SELECT d.id_despacho
     FROM directores d
-    JOIN despachos de
-    ON d.id_despacho = de.id_despacho
+    JOIN despachos de ON d.id_despacho = de.id_despacho
+    GROUP BY d.id_despacho, de.capacidad
+    HAVING COUNT(*) > de.capacidad
+) AS subconsulta;
     
-    GROUP BY id_departamento HAVING COUNT(DNI)>2
-    );
+     SELECT d.id_despacho
+    FROM directores d
+    JOIN despachos de ON d.id_despacho = de.id_despacho
+    GROUP BY d.id_despacho, de.capacidad
+    HAVING COUNT(*) > de.capacidad
+    
     
 
 
